@@ -38,6 +38,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.contentInset = UIEdgeInsetsMake(20.0f, 0.0f, 20.0f, 0.0f);
+    self.tableView.estimatedRowHeight = 70;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.speechController = [THSpeechController speechController];
     self.speechController.synthesizer.delegate = self;
     self.speechStrings = [NSMutableArray array];

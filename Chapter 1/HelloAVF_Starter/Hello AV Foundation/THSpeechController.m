@@ -28,6 +28,10 @@
 
 @interface THSpeechController ()
 
+@property (strong, nonatomic) AVSpeechSynthesizer *synthesizer;//在extension中重新定义该属性，这样就可以支持读写操作。
+@property (strong, nonatomic) NSArray *voices;
+@property (strong, nonatomic) NSArray *speechStrings;
+
 @end
 
 @implementation THSpeechController
@@ -36,8 +40,41 @@
     return [[self alloc] init];
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _synthesizer = [[AVSpeechSynthesizer alloc] init];
+        _voices = @[[AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"],//美式英语
+                    [AVSpeechSynthesisVoice voiceWithLanguage:@"en-GB"],//英式英语
+                    [AVSpeechSynthesisVoice voiceWithLanguage:@"zh-CN"]];
+        _speechStrings = [self buildSpeechStrings];
+    }
+    return self;
+}
+- (NSArray *)buildSpeechStrings {
+    return @[@"试试汉语行不行。666",
+             @"行行行，他日若遂凌云志，敢笑黄巢不丈夫。 哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
+             @"Hell AV Foundation, How are you?",
+             @"I'm well, Thanks for asking",
+             @"Very! I have always felt so misunderstood",
+             @"What's your favorite feature?",
+             @"Oh, they're all my babies. I couldn't possible choose",
+             @"It was great to speak with you",
+             @"The pleasure was all mine! Have fun!"];
+}
 - (void)beginConversation {
-
+    for (NSUInteger i = 0; i < self.speechStrings.count; i++) {
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:self.speechStrings[i]];
+        if (i<2) {
+            utterance.voice = self.voices[2];
+        }else {
+            utterance.voice = self.voices[i % 2];
+        }
+        utterance.rate = 0.4f;//播放速度
+        utterance.pitchMultiplier = 0.8f;//i音调
+        utterance.postUtteranceDelay = 0.1f;
+        [self.synthesizer speakUtterance:utterance];
+    }
 }
 
 @end
