@@ -37,10 +37,11 @@
 - (id)init {
     self = [super init];
     if (self) {
+        
         AVAudioPlayer *guitarPlayer = [self playerForFile:@"guitar"];
         AVAudioPlayer *bassPlayer = [self playerForFile:@"bass"];
         AVAudioPlayer *drumsPlayer = [self playerForFile:@"drums"];
-
+        
         guitarPlayer.delegate = self;
 
         _players = @[guitarPlayer, bassPlayer, drumsPlayer];
