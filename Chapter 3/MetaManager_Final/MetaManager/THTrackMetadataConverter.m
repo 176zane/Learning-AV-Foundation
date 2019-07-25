@@ -27,12 +27,12 @@
 #import "THMetadataKeys.h"
 
 @implementation THTrackMetadataConverter
-
+//音轨通常包含一首歌在整个唱片中的编号位置信息
 - (id)displayValueFromMetadataItem:(AVMetadataItem *)item {
     
     NSNumber *number = nil;
     NSNumber *count = nil;
-    
+    //mp3音轨信息以xx/xx格式返回，如一个包含10首歌的唱片中的第8首为：8/10
     if ([item.value isKindOfClass:[NSString class]]) {                      // 1
         NSArray *components =
             [item.stringValue componentsSeparatedByString:@"/"];

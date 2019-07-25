@@ -32,6 +32,7 @@
     if ([item.value isKindOfClass:[NSData class]]) {                        // 1
         image = [[NSImage alloc] initWithData:item.dataValue];
     }
+    //如果item是mp3，此时其value属性可能是一个字典
     else if ([item.value isKindOfClass:[NSDictionary class]]) {             // 2
         NSDictionary *dict = (NSDictionary *)item.value;
         image = [[NSImage alloc] initWithData:dict[@"data"]];
@@ -45,6 +46,7 @@
     AVMutableMetadataItem *metadataItem = [item mutableCopy];
 
     NSImage *image = (NSImage *)value;
+    //由于 AV Foundation无法写入ID3数据，所以该值就是以NSData格式保存的图片数据
     metadataItem.value = image.TIFFRepresentation;                          // 3
     
     return metadataItem;

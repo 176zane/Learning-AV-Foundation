@@ -101,7 +101,7 @@
                 //NSLog(@"%@: %@", item.keyString, item.value);
                 [self.metadata addMetadataItem:item withKey:item.commonKey];
             }
-
+            //availableMetadataFormats 返回一个字符串数组，定义了资源中包含的所有元数据格式。
             for (id format in self.asset.availableMetadataFormats) {        // 5
                 if ([self.acceptedFormats containsObject:format]) {
                     NSArray *items = [self.asset metadataForFormat:format];
@@ -122,8 +122,9 @@
 }
 
 - (void)saveWithCompletionHandler:(THCompletionHandler)handler {
-
-    NSString *presetName = AVAssetExportPresetPassthrough;                  // 1
+    //AVAssetExportPresetPassthrough让我们在不需要对媒体编码的前提下实现写入元数据的功能。
+    NSString *presetName = AVAssetExportPresetPassthrough;// 1
+    //AVAssetExportSession 用于将AVAsset内容根据导出预设条件进行转码。并将资源写入磁盘中。
     AVAssetExportSession *session =
         [[AVAssetExportSession alloc] initWithAsset:self.asset
                                          presetName:presetName];
