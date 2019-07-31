@@ -36,6 +36,7 @@
     [super viewDidLoad];
     self.controller = [[THPlayerController alloc] initWithURL:self.assetURL];
     UIView *playerView = self.controller.view;
+    //此处设置THPlayerView的frame
     playerView.frame = self.view.frame;
     [self.view addSubview:playerView];
 }

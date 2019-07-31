@@ -27,7 +27,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 #import "THChapter.h"
-#import <QTKit/QTKit.h>
+//#import <QTKit/QTKit.h>
 #import "NSFileManager+THAdditions.h"
 #import "THWindow.h"
 
@@ -77,11 +77,11 @@
 
     self.playerItem = [AVPlayerItem playerItemWithAsset:self.asset          // 4
                            automaticallyLoadedAssetKeys:keys];
-
+    //options参数传0表示不需要改变的值的字典
     [self.playerItem addObserver:self                                       // 5
                       forKeyPath:STATUS_KEY
                          options:0 context:NULL];
-
+    //将AVPlayerItem与一个AVPlayer对象进行关联，才会开始将媒体放入播放队列中
     self.playerView.player = [AVPlayer playerWithPlayerItem:self.playerItem];
     self.playerView.showsSharingServiceButton = YES;
 }
@@ -128,7 +128,7 @@
 - (NSArray *)chaptersForAsset:(AVAsset *)asset {
 
     NSArray *languages = [NSLocale preferredLanguages];                     // 1
-
+    //获取资源中与用户首选语言最匹配的章元数据组
     NSArray *metadataGroups =                                               // 2
     [asset chapterMetadataGroupsBestMatchingPreferredLanguages:languages];
 
@@ -155,7 +155,7 @@
 - (void)setupActionMenu {
 
     NSMenu *menu = [[NSMenu alloc] init];                                   // 1
-    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Previous Chapter"
+    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"上一章节"
                                              action:@selector(previousChapter:)
                                       keyEquivalent:@""]];
     [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Next Chapter"
@@ -183,6 +183,7 @@
 - (THChapter *)findPreviousChapter {
 
     CMTime playerTime = self.playerItem.currentTime;
+    //当前时间-3s
     CMTime currentTime = CMTimeSubtract(playerTime, CMTimeMake(3, 1));      // 1
 	CMTime pastTime = kCMTimeNegativeInfinity;
 
@@ -226,38 +227,38 @@
 - (BOOL)readFromURL:(NSURL *)url
              ofType:(NSString *)typeName
               error:(NSError *__autoreleasing *)outError {
-
-    NSError *error = nil;
-
-    if ([QTMovieModernizer requiresModernization:url error:&error]) {       // 1
-
-        self.modernizing = YES;
-
-        NSURL *destURL = [self tempURLForURL:url];                          // 2
-
-        if (!destURL) {
-            self.modernizing = NO;
-            NSLog(@"Error creating destination URL, skipping modernization.");
-            return NO;
-        }
-
-        QTMovieModernizer *modernizer =                                     // 3
-            [[QTMovieModernizer alloc] initWithSourceURL:url
-                                          destinationURL:destURL];
-
-        modernizer.outputFormat = QTMovieModernizerOutputFormat_H264;       // 4
-
-        [modernizer modernizeWithCompletionHandler:^{
-            if (modernizer.status ==                                        // 5
-                    QTMovieModernizerStatusCompletedWithSuccess) {
-
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self setupPlaybackStackWithURL:destURL];               // 6
-                    [(id)self.windowForSheet hideConvertingView];
-                });
-            }
-        }];
-    }
+//
+//    NSError *error = nil;
+//
+//    if ([QTMovieModernizer requiresModernization:url error:&error]) {       // 1
+//
+//        self.modernizing = YES;
+//
+//        NSURL *destURL = [self tempURLForURL:url];                          // 2
+//
+//        if (!destURL) {
+//            self.modernizing = NO;
+//            NSLog(@"Error creating destination URL, skipping modernization.");
+//            return NO;
+//        }
+//
+//        QTMovieModernizer *modernizer =                                     // 3
+//            [[QTMovieModernizer alloc] initWithSourceURL:url
+//                                          destinationURL:destURL];
+//
+//        modernizer.outputFormat = QTMovieModernizerOutputFormat_H264;       // 4
+//
+//        [modernizer modernizeWithCompletionHandler:^{
+//            if (modernizer.status ==                                        // 5
+//                    QTMovieModernizerStatusCompletedWithSuccess) {
+//
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self setupPlaybackStackWithURL:destURL];               // 6
+//                    [(id)self.windowForSheet hideConvertingView];
+//                });
+//            }
+//        }];
+//    }
 
     return YES;
 }
@@ -309,13 +310,14 @@
             // Order out save panel as the export window will be shown
             [savePanel orderOut:nil];
 
-            NSString *preset = AVAssetExportPresetAppleM4V720pHD;
+            NSString *preset = AVAssetExportPresetAppleM4V480pSD;
             self.exportSession =                                            // 2
             [[AVAssetExportSession alloc] initWithAsset:self.asset
                                              presetName:preset];
 
-            NSLog(@"%@", [self.exportSession.supportedFileTypes firstObject]);
-
+            NSLog(@"supportedFileType:%@", [self.exportSession.supportedFileTypes firstObject]);
+            
+            //若没有执行trim，反向和前向结束时间就是kCMTimedInvalid，结果会得到kCMTimeRangeInvalid的时间范围，会导出全部视频
             CMTime startTime = self.playerItem.reversePlaybackEndTime;
             CMTime endTime = self.playerItem.forwardPlaybackEndTime;
             CMTimeRange timeRange = CMTimeRangeMake(startTime, endTime);    // 3
@@ -333,10 +335,16 @@
                           completionHandler:nil];
 
             [self.exportSession exportAsynchronouslyWithCompletionHandler:^{
-                // Tear down                                                // 6
-                [self.windowForSheet endSheet:self.exportController.window];
-                self.exportController = nil;
-                self.exportSession = nil;
+                // Tear down
+                // 6
+                NSLog(@"thread:%@",[NSThread currentThread]);
+                //需要切换到主线程
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.windowForSheet endSheet:self.exportController.window];
+                    self.exportController = nil;
+                    self.exportSession = nil;
+                });
+                
             }];
         }
     }];

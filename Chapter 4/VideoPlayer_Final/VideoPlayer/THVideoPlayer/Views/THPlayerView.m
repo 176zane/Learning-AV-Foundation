@@ -43,9 +43,10 @@
         self.backgroundColor = [UIColor blackColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight |
                                 UIViewAutoresizingFlexibleWidth;
-
+        //将AVPlayer输出的视频指向AVPlayerLayer实例
         [(AVPlayerLayer *) [self layer] setPlayer:player];                  // 4
-
+        //啥时候赋值给_overlayView的? 这个方法很神奇啊
+        //nib文件的fileOwnerd连接到overlayView
         [[NSBundle mainBundle] loadNibNamed:@"THOverlayView"                // 5
                                       owner:self
                                     options:nil];

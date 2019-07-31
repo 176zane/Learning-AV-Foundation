@@ -60,7 +60,9 @@
 	_exportSession = exportSession;
     __weak THExportWindowController *weakSelf = self;
 	_timer = [NSTimer scheduledTimerWithTimeInterval:0.1 repeating:YES firing:^{
+        //留意此处的exportSession.progress在trim了视频后会出错
         weakSelf.progressIndicator.doubleValue = weakSelf.exportSession.progress;
+        NSLog(@"exportSession.progress:%f",weakSelf.exportSession.progress);
     }];
 }
 

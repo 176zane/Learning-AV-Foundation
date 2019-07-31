@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F634F8322EF21A10098446E /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C439A7AE18017472001F667B /* QTKit.framework */; };
 		C439A79F18014789001F667B /* THChapter.m in Sources */ = {isa = PBXBuildFile; fileRef = C439A79E18014789001F667B /* THChapter.m */; };
 		C439A7A1180147AE001F667B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C439A7A0180147AE001F667B /* CoreMedia.framework */; };
 		C439A7A51801617D001F667B /* THExportWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C439A7A31801617D001F667B /* THExportWindowController.m */; };
 		C439A7A61801617D001F667B /* THExportWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C439A7A41801617D001F667B /* THExportWindow.xib */; };
 		C439A7AB1801653E001F667B /* NSTimer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = C439A7A81801653E001F667B /* NSTimer+Additions.m */; };
 		C439A7AC1801653E001F667B /* NSFileManager+THAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C439A7AA1801653E001F667B /* NSFileManager+THAdditions.m */; };
-		C439A7AF18017472001F667B /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C439A7AE18017472001F667B /* QTKit.framework */; };
 		C439A7B2180174FE001F667B /* THWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C439A7B1180174FE001F667B /* THWindow.m */; };
 		C439A7B918017546001F667B /* ITProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C439A7B418017546001F667B /* ITProgressIndicator.m */; };
 		C439A7BA18017546001F667B /* NSBezierPath+Geometry.m in Sources */ = {isa = PBXBuildFile; fileRef = C439A7B618017546001F667B /* NSBezierPath+Geometry.m */; };
@@ -77,8 +77,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F634F8322EF21A10098446E /* QTKit.framework in Frameworks */,
 				C439A7BD1801755A001F667B /* QuartzCore.framework in Frameworks */,
-				C439A7AF18017472001F667B /* QTKit.framework in Frameworks */,
 				C439A7A1180147AE001F667B /* CoreMedia.framework in Frameworks */,
 				C43BDAAE180118B300AD0F16 /* AVKit.framework in Frameworks */,
 				C43BDAAC180118A800AD0F16 /* AVFoundation.framework in Frameworks */,
@@ -232,6 +232,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -394,6 +395,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KitTime Player/KitTime Player-Prefix.pch";
 				INFOPLIST_FILE = "KitTime Player/KitTime Player-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tapharmonic.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -408,6 +410,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KitTime Player/KitTime Player-Prefix.pch";
 				INFOPLIST_FILE = "KitTime Player/KitTime Player-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tapharmonic.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

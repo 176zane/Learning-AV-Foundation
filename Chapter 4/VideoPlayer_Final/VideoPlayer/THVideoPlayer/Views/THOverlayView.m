@@ -129,7 +129,7 @@
         NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
         UIImage *image = [UIImage imageNamed:@"subtitles"];
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:image
-                                                                 style:UIBarButtonItemStyleBordered
+                                                                 style:UIBarButtonItemStylePlain
                                                                 target:self
                                                                 action:@selector(showSubtitles:)];
         [items addObject:item];

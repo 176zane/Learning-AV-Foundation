@@ -40,6 +40,8 @@
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)controller {
     [super windowControllerDidLoadNib:controller];
+    self.playerView.player = [AVPlayer playerWithURL:[self fileURL]];
+    self.playerView.showsSharingServiceButton = YES;
 
 }
 

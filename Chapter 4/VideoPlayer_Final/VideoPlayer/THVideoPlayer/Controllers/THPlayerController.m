@@ -79,6 +79,7 @@ static const NSString *PlayerItemStatusContext;
         @"commonMetadata",
         @"availableMediaCharacteristicsWithMediaSelectionOptions"
     ];
+    //当playerItem处于AVPlayerItemStatusReadyToPlay状态时，其自动加载的属性已经处于成功、失败或取消的终点状态。
     self.playerItem = [AVPlayerItem playerItemWithAsset:self.asset          // 2
                            automaticallyLoadedAssetKeys:keys];
 
@@ -100,7 +101,7 @@ static const NSString *PlayerItemStatusContext;
                        context:(void *)context {
     
     if (context == &PlayerItemStatusContext) {
-        
+        //AV Foundation没有指定在哪个线程执行status改变通知。
         dispatch_async(dispatch_get_main_queue(), ^{                        // 1
             
             [self.playerItem removeObserver:self forKeyPath:STATUS_KEYPATH];
@@ -172,6 +173,7 @@ static const NSString *PlayerItemStatusContext;
 - (void)addPlayerItemTimeObserver {
     
     // Create 0.5 second refresh interval - REFRESH_INTERVAL == 0.5
+    //时间间隔设置为0.5秒
     CMTime interval =
         CMTimeMakeWithSeconds(REFRESH_INTERVAL, NSEC_PER_SEC);              // 1
     
@@ -187,6 +189,7 @@ static const NSString *PlayerItemStatusContext;
     };
     
     // Add observer and store pointer for future use
+    //需要对返回值强引用
     self.timeObserver =                                                     // 5
         [self.player addPeriodicTimeObserverForInterval:interval
                                                   queue:queue
@@ -235,7 +238,7 @@ static const NSString *PlayerItemStatusContext;
 }
 
 - (void)scrubbingDidStart {                                                 // 1
-    self.lastPlaybackRate = self.player.rate;
+    self.lastPlaybackRate = self.player.rate;//记录滑动之前的播放状态
     [self.player pause];
     [self.player removeTimeObserver:self.timeObserver];
     self.timeObserver = nil;
@@ -257,11 +260,12 @@ static const NSString *PlayerItemStatusContext;
 #pragma mark - Thumbnail Generation
 
 - (void)generateThumbnails {
-    
+    //保持对该对象的强引用，否则可能导致无法调用回调
     self.imageGenerator =                                                   // 1
         [AVAssetImageGenerator assetImageGeneratorWithAsset:self.asset];
     
     // Generate the @2x equivalent
+    //默认情况下，捕捉的图片都保持原始大小，因此明确配置该属性可以对图片进行缩放并提高性能。height设置为0，是因为可以根据width值与宽高比计算出高度值
     self.imageGenerator.maximumSize = CGSizeMake(200.0f, 0.0f);             // 2
 
     CMTime duration = self.asset.duration;
