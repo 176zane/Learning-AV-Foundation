@@ -45,15 +45,6 @@
 
 @implementation THViewController
 
-- (IBAction)flashControlChanged:(id)sender {
-    NSInteger mode = [(THFlashControl *)sender selectedMode];
-    if (self.cameraMode == THCameraModePhoto) {
-        self.cameraController.flashMode = mode;
-    } else {
-        self.cameraController.torchMode = mode;
-    }
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -75,7 +66,6 @@
     
     self.previewView.tapToFocusEnabled = self.cameraController.cameraSupportsTapToFocus;
     self.previewView.tapToExposeEnabled = self.cameraController.cameraSupportsTapToExpose;
-    
 }
 
 - (void)updateThumbnail:(NSNotification *)notification {
@@ -103,7 +93,14 @@
 - (IBAction)cameraModeChanged:(id)sender {
     self.cameraMode = [sender cameraMode];
 }
-
+- (IBAction)flashControlChanged:(id)sender {
+    NSInteger mode = [(THFlashControl *)sender selectedMode];
+    if (self.cameraMode == THCameraModePhoto) {
+        self.cameraController.flashMode = mode;
+    } else {
+        self.cameraController.torchMode = mode;
+    }
+}
 - (IBAction)swapCameras:(id)sender {
     if ([self.cameraController switchCameras]) {
         BOOL hidden = NO;

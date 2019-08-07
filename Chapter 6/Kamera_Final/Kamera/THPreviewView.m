@@ -90,7 +90,7 @@
         [self.delegate tappedToFocusAtPoint:[self captureDevicePointForPoint:point]];
     }
 }
-
+//将屏幕坐标系上的触控点转换为摄像头坐标系上的点
 - (CGPoint)captureDevicePointForPoint:(CGPoint)point {                      // 3
     AVCaptureVideoPreviewLayer *layer =
         (AVCaptureVideoPreviewLayer *)self.layer;

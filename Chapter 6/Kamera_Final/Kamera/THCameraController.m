@@ -97,6 +97,7 @@ NSString *const THThumbnailCreatedNotification = @"THThumbnailCreated";
 - (void)startSession {
 	if (![self.captureSession isRunning]) {                                 // 1
 		dispatch_async([self globalQueue], ^{
+            //startRunning是一个同步方法，并且会消耗一定时间
 			[self.captureSession startRunning];
 		});
 	}
@@ -163,6 +164,7 @@ NSString *const THThumbnailCreatedNotification = @"THThumbnailCreated";
     [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
 
     if (videoInput) {
+        //对captionSessiond进行任何改变都需要通过beginConfiguration 和commitConfiguration来将所有变更整合在一起，得出一个单独的原子性的修改
         [self.captureSession beginConfiguration];                           // 3
 
         [self.captureSession removeInput:self.activeVideoInput];            // 4
@@ -273,7 +275,7 @@ static const NSString *THCameraAdjustingExposureContext;
 - (void)exposeAtPoint:(CGPoint)point {
 
     AVCaptureDevice *device = [self activeCamera];
-
+    //早期iOS设备不支持AVCaptureExposureModeAutoExposure
     AVCaptureExposureMode exposureMode =
     AVCaptureExposureModeContinuousAutoExposure;
 
@@ -315,7 +317,8 @@ static const NSString *THCameraAdjustingExposureContext;
             [object removeObserver:self                                     // 7
                         forKeyPath:@"adjustingExposure"
                            context:&THCameraAdjustingExposureContext];
-
+            
+            //异步方式回到主队列，将exposureMode更改转移到下一个时间循环运行很重要，这样可以使得上面的removeObserver：调用有机会完成。
             dispatch_async(dispatch_get_main_queue(), ^{                    // 8
                 NSError *error;
                 if ([device lockForConfiguration:&error]) {
@@ -376,12 +379,13 @@ static const NSString *THCameraAdjustingExposureContext;
 #pragma mark - Image Capture Methods
 
 - (void)captureStillImage {
-
+    //查找静态图片输出时连接时，参数媒体类型一般传递:AVMediaTypeVideo
     AVCaptureConnection *connection =                                   
         [self.imageOutput connectionWithMediaType:AVMediaTypeVideo];
-
+    //测试当手机锁定竖屏时 返回永远是竖屏，但是系统相机可以拍摄横屏照片
     if (connection.isVideoOrientationSupported) {                       
         connection.videoOrientation = [self currentVideoOrientation];
+        
     }
 
     id handler = ^(CMSampleBufferRef sampleBuffer, NSError *error) {
@@ -444,7 +448,7 @@ static const NSString *THCameraAdjustingExposureContext;
 		}
 
 		if ([videoConnection isVideoStabilizationSupported]) {              // 4
-            
+            //支持视频稳定可以显著提升捕捉到的视频质量
             if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0) {
                 videoConnection.enablesVideoStabilizationWhenAvailable = YES;
             } else {
@@ -513,7 +517,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 - (void)writeVideoToAssetsLibrary:(NSURL *)videoURL {
 
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];              // 2
-
+    //检查视频是否可被写入
     if ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:videoURL]) {   // 3
 
         ALAssetsLibraryWriteVideoCompletionBlock completionBlock;
@@ -540,7 +544,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
         AVAssetImageGenerator *imageGenerator =                             // 5
             [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
         imageGenerator.maximumSize = CGSizeMake(100.0f, 0.0f);
-        imageGenerator.appliesPreferredTrackTransform = YES;
+        imageGenerator.appliesPreferredTrackTransform = YES;//捕捉l缩略图时会考虑视频的变化（如方向变化）
 
         CGImageRef imageRef = [imageGenerator copyCGImageAtTime:kCMTimeZero // 6
                                                      actualTime:NULL
@@ -564,6 +568,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
         case UIDeviceOrientationPortrait:
             orientation = AVCaptureVideoOrientationPortrait;
             break;
+            //左侧与右侧相反
         case UIDeviceOrientationLandscapeRight:
             orientation = AVCaptureVideoOrientationLandscapeLeft;
             break;
