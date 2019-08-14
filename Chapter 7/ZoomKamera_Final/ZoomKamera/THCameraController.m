@@ -55,10 +55,10 @@ static const NSString *THRampingVideoZoomFactorContext;
 						change:(NSDictionary *)change
 					   context:(void *)context {
 
-	if (context == &THRampingVideoZoomContext) {
+	if (context == &THRampingVideoZoomContext) {//rampingVideoZooma开始和结束时触发
         [self updateZoomingDelegate];                                       // 4
 	} else if (context == &THRampingVideoZoomFactorContext) {
-		if (self.activeCamera.isRampingVideoZoom) {
+		if (self.activeCamera.isRampingVideoZoom) {//当手动滑动slider时 不触发isRampingVideoZoom
 			[self updateZoomingDelegate];                                   // 5
 		}
 	} else {
@@ -81,16 +81,17 @@ static const NSString *THRampingVideoZoomFactorContext;
 }
 
 - (CGFloat)maxZoomFactor {
-	return MIN(self.activeCamera.activeFormat.videoMaxZoomFactor, 4.0f);    // 2
+	return MIN(self.activeCamera.activeFormat.videoMaxZoomFactor, 8.0f);    // 2
 }
 
 - (void)setZoomValue:(CGFloat)zoomValue {                                   // 3
-	if (!self.activeCamera.isRampingVideoZoom) {
+//    if (!self.activeCamera.isRampingVideoZoom) {
 
         NSError *error;
+        //设备 修改配置前不lock的话会抛出异常
         if ([self.activeCamera lockForConfiguration:&error]) {              // 4
-
             // Provide linear feel to zoom slider
+            
 			CGFloat zoomFactor = pow([self maxZoomFactor], zoomValue);      // 5
             self.activeCamera.videoZoomFactor = zoomFactor;
 
@@ -99,7 +100,7 @@ static const NSString *THRampingVideoZoomFactorContext;
 		} else {
             [self.delegate deviceConfigurationFailedWithError:error];
         }
-	}
+    //}
 }
 
 - (void)rampZoomToValue:(CGFloat)zoomValue {                                // 1
@@ -114,12 +115,13 @@ static const NSString *THRampingVideoZoomFactorContext;
 	}
 }
 
-- (void)cancelZoom {                                                        // 3
-	NSError *error;
+- (void)cancelZoom {                                                       // 3
+    NSError *error;
 	if ([self.activeCamera lockForConfiguration:&error]) {
 		[self.activeCamera cancelVideoZoomRamp];                            // 4
 		[self.activeCamera unlockForConfiguration];
 	} else {
+        NSLog(@"cancelZoom error");
 		[self.delegate deviceConfigurationFailedWithError:error];
 	}
 }

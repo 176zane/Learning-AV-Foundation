@@ -33,15 +33,15 @@
 @implementation THCameraController
 
 - (BOOL)setupSessionOutputs:(NSError **)error {
-
+    //因为不需要父类中的实现，所以此处不调用super的实现
     self.metadataOutput = [[AVCaptureMetadataOutput alloc] init];           // 2
 
     if ([self.captureSession canAddOutput:self.metadataOutput]) {
         [self.captureSession addOutput:self.metadataOutput];
-
+        //指定对象输出的元数据类型
         NSArray *metadataObjectTypes = @[AVMetadataObjectTypeFace];         // 3
         self.metadataOutput.metadataObjectTypes = metadataObjectTypes;
-
+        //当有新的元数据被检测到时，AVCaptureMetadataOutput需要一个委托对象可以被调用，队列需要传入串行队列，以方便顺序执行。由于人脸识别用到硬件加速，所以需要知道这个参数为主队列
         dispatch_queue_t mainQueue = dispatch_get_main_queue();
         [self.metadataOutput setMetadataObjectsDelegate:self                // 4
                                                   queue:mainQueue];

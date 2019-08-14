@@ -63,6 +63,7 @@
 
 	self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
     self.videoDataOutput.alwaysDiscardsLateVideoFrames = YES;
+    //设置摄像头输出格式为OPENGL ES 经常使用的BGRA
     self.videoDataOutput.videoSettings =
     @{(id)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA)};
 
@@ -89,9 +90,10 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 
     CMFormatDescriptionRef formatDescription =                              // 2
         CMSampleBufferGetFormatDescription(sampleBuffer);
+    //获取帧的维度信息。
     CMVideoDimensions dimensions =
         CMVideoFormatDescriptionGetDimensions(formatDescription);
-
+    //创建贴图
     err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault, // 3
                                                        _textureCache,
                                                        pixelBuffer,
@@ -115,7 +117,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 
     [self cleanupTextures];
 }
-
+//释放贴图并刷新贴图缓存
 - (void)cleanupTextures {                                                   // 6
     if (_cameraTexture) {
         CFRelease(_cameraTexture);

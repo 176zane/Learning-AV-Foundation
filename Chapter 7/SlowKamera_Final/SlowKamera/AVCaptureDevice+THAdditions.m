@@ -92,7 +92,7 @@
 
 
     if ([self lockForConfiguration:error]) {                                // 2
-
+        //使用CMTime实例而不是帧率来处理帧时长数据
         CMTime minFrameDuration = qos.frameRateRange.minFrameDuration;
 
         self.activeFormat = qos.format;                                     // 3
@@ -109,12 +109,12 @@
 
     AVCaptureDeviceFormat *maxFormat = nil;
     AVFrameRateRange *maxFrameRateRange = nil;
-
+    //遍历捕捉设备支持的formats
     for (AVCaptureDeviceFormat *format in self.formats) {
 
         FourCharCode codecType =                                            // 3
             CMVideoFormatDescriptionGetCodecType(format.formatDescription);
-
+        //筛选出视频格式
         if (codecType == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange) { // 4
 
             NSArray *frameRateRanges = format.videoSupportedFrameRateRanges;

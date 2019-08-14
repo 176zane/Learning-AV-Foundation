@@ -33,6 +33,7 @@
 @implementation THCameraController
 
 - (NSString *)sessionPreset {                                               // 2
+    //建议设置最低合理解决方案以提高性能
     return AVCaptureSessionPreset640x480;
 }
 
@@ -42,7 +43,7 @@
         if (self.activeCamera.autoFocusRangeRestrictionSupported) {         // 3
 
             if ([self.activeCamera lockForConfiguration:error]) {
-
+                //通过缩小扫描区域来提高识别成功率
                 self.activeCamera.autoFocusRangeRestriction =
                             AVCaptureAutoFocusRangeRestrictionNear;
 
@@ -62,7 +63,7 @@
         dispatch_queue_t mainQueue = dispatch_get_main_queue();
         [self.metadataOutput setMetadataObjectsDelegate:self
                                                   queue:mainQueue];
-
+        //设置感兴趣的数据类型
         NSArray *types = @[AVMetadataObjectTypeQRCode,                      // 1
                            AVMetadataObjectTypeAztecCode,
                            AVMetadataObjectTypeUPCECode];

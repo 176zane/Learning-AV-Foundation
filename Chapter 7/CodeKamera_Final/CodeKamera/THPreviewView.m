@@ -54,6 +54,7 @@
 
 - (void)setupView {
     _codeLayers = [NSMutableDictionary dictionary];
+    //保证宽高比在边界范围之内
     self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspect;
 }
 
@@ -81,6 +82,7 @@
         if (stringValue) {
             [lostCodes removeObject:stringValue];
         } else {
+            //如果没有stringValue开始下一个循环
             continue;
         }
 

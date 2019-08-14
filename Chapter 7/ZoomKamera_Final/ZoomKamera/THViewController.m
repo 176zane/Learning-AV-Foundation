@@ -127,6 +127,7 @@
 }
 
 - (IBAction)rampZoomToValue:(id)sender {
+    NSLog(@"111");
     CGFloat zoomValue = [(UIButton *)sender tag];
 	[self.cameraController rampZoomToValue:zoomValue];
 }

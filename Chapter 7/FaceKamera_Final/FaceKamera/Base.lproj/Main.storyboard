@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -14,31 +18,31 @@
                         <viewControllerLayoutGuide type="bottom" id="geb-iR-UfE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS" customClass="THCameraView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L7h-C1-yGF" customClass="THPreviewView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="483"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="733"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="18I-er-Pkx">
-                                <rect key="frame" x="0.0" y="483" width="320" height="85"/>
+                                <rect key="frame" x="0.0" y="777" width="414" height="85"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IrP-XX-1Xu">
-                                        <rect key="frame" x="136" y="25" width="48" height="36"/>
+                                        <rect key="frame" x="183" y="24.5" width="48" height="36"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="fNl-2x-jOV"/>
                                             <constraint firstAttribute="width" constant="48" id="xFh-U5-iAP"/>
                                         </constraints>
                                         <state key="normal" image="big_camera_icon">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="swapCameras:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Gof-Lb-jyA"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.13006636499999999" green="0.14571855959999999" blue="0.18062162400000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.13006636499999999" green="0.14571855959999999" blue="0.18062162400000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="IrP-XX-1Xu" firstAttribute="centerY" secondItem="18I-er-Pkx" secondAttribute="centerY" id="1QY-4q-kq5"/>
                                     <constraint firstItem="IrP-XX-1Xu" firstAttribute="centerX" secondItem="18I-er-Pkx" secondAttribute="centerX" id="Gth-xv-Lpv"/>
@@ -46,7 +50,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="L7h-C1-yGF" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="IYk-id-hZy"/>
                             <constraint firstItem="18I-er-Pkx" firstAttribute="top" secondItem="L7h-C1-yGF" secondAttribute="bottom" id="P3P-1j-lri"/>

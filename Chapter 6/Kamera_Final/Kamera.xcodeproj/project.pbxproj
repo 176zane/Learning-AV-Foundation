@@ -246,10 +246,9 @@
 			};
 			buildConfigurationList = C402A67B182AB0EA00CC7CB1 /* Build configuration list for PBXProject "Kamera" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);

@@ -59,6 +59,7 @@
 
     self.overlayLayer = [CALayer layer];                                    // 2
     self.overlayLayer.frame = self.bounds;
+    //设置sublayerTransform属性为CATransform3D可以对所有子层应用视觉转换
     self.overlayLayer.sublayerTransform = CATransform3DMakePerspective(1000);
     [self.previewLayer addSublayer:self.overlayLayer];
 }
@@ -93,7 +94,7 @@
             [self.overlayLayer addSublayer:layer];
             self.faceLayers[faceID] = layer;
         }
-
+        //重置之前应用过的变换
         layer.transform = CATransform3DIdentity;                            // 1
         layer.frame = face.bounds;
 
@@ -119,6 +120,7 @@
 - (NSArray *)transformedFacesFromFaces:(NSArray *)faces {                   // 2
     NSMutableArray *transformedFaces = [NSMutableArray array];
     for (AVMetadataObject *face in faces) {
+        //将元数据从设备空间转换到视图坐标系空间
         AVMetadataObject *transformedFace =                                 // 3
             [self.previewLayer transformedMetadataObjectForMetadataObject:face];
         [transformedFaces addObject:transformedFace];
@@ -134,16 +136,16 @@
     return layer;
 }
 
-// Rotate around Z-axis
+// Rotate around Z-axis，表示人头部向肩膀方向的倾斜角度
 - (CATransform3D)transformForRollAngle:(CGFloat)rollAngleInDegrees {        // 3
     CGFloat rollAngleInRadians = THDegreesToRadians(rollAngleInDegrees);
     return CATransform3DMakeRotation(rollAngleInRadians, 0.0f, 0.0f, 1.0f);
 }
 
-// Rotate around Y-axis
+// Rotate around Y-axis，表示人脸绕y轴旋转的角度
 - (CATransform3D)transformForYawAngle:(CGFloat)yawAngleInDegrees {          // 5
     CGFloat yawAngleInRadians = THDegreesToRadians(yawAngleInDegrees);
-
+    
     CATransform3D yawTransform =
         CATransform3DMakeRotation(yawAngleInRadians, 0.0f, -1.0f, 0.0f);
 

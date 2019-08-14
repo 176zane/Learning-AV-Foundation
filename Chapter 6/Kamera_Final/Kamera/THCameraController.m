@@ -544,8 +544,8 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
         AVAssetImageGenerator *imageGenerator =                             // 5
             [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
         imageGenerator.maximumSize = CGSizeMake(100.0f, 0.0f);
-        imageGenerator.appliesPreferredTrackTransform = YES;//捕捉l缩略图时会考虑视频的变化（如方向变化）
-
+        imageGenerator.appliesPreferredTrackTransform = YES;//捕捉缩略图时会考虑视频的变化（如方向变化）
+        //copyCGImageAtTime 是一个同步方法，当需要异步生成多张图片时可以调用 generateCGImagesAsunchronouslyForTimes方法
         CGImageRef imageRef = [imageGenerator copyCGImageAtTime:kCMTimeZero // 6
                                                      actualTime:NULL
                                                           error:nil];
