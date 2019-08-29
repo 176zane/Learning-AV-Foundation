@@ -64,7 +64,7 @@ static NSString *const THVideoFilename = @"movie.mov";
 		_videoSettings = videoSettings;
 		_audioSettings = audioSettings;
 		_dispatchQueue = dispatchQueue;
-
+        //core image 上下文，受OpenGL ES支持并用于筛选传入的视频样本，最后得到一个CVPixelBuffer
         _ciContext = [THContextManager sharedInstance].ciContext;           // 3
 		_colorSpace = CGColorSpaceCreateDeviceRGB();
 
@@ -108,20 +108,20 @@ static NSString *const THVideoFilename = @"movie.mov";
         self.assetWriterVideoInput =                                        // 3
             [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeVideo
                                            outputSettings:self.videoSettings];
-
+        //应该针对实时性进行优化
         self.assetWriterVideoInput.expectsMediaDataInRealTime = YES;
 
         UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
 		self.assetWriterVideoInput.transform =                              // 4
             THTransformForDeviceOrientation(orientation);
-
+        
 		NSDictionary *attributes = @{                                       // 5
 			(id)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA),
 			(id)kCVPixelBufferWidthKey : self.videoSettings[AVVideoWidthKey],
 			(id)kCVPixelBufferHeightKey : self.videoSettings[AVVideoHeightKey],
 			(id)kCVPixelFormatOpenGLESCompatibility : (id)kCFBooleanTrue
 		};
-
+        //该对象提供了一个优化的CVPixelBufferPool，使用它可以创建CVPixelBuffer对象来渲染滤镜视频帧
         self.assetWriterInputPixelBufferAdaptor =                           // 6
             [[AVAssetWriterInputPixelBufferAdaptor alloc]
                 initWithAssetWriterInput:self.assetWriterVideoInput
@@ -169,6 +169,7 @@ static NSString *const THVideoFilename = @"movie.mov";
             CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
         
         if (self.firstSample) {                                             // 2
+            //启动一个新的写入会话
             if ([self.assetWriter startWriting]) {
                 [self.assetWriter startSessionAtSourceTime:timestamp];
             } else {
@@ -181,7 +182,7 @@ static NSString *const THVideoFilename = @"movie.mov";
         
         CVPixelBufferPoolRef pixelBufferPool =
             self.assetWriterInputPixelBufferAdaptor.pixelBufferPool;
-        
+        //从pixelBufferPool中创建一个空的pixelBuffer，使用该pixelBuffer渲染筛选好的视频帧的输出
         OSStatus err = CVPixelBufferPoolCreatePixelBuffer(NULL,             // 3
                                                           pixelBufferPool,
                                                           &outputRenderBuffer);
@@ -192,24 +193,24 @@ static NSString *const THVideoFilename = @"movie.mov";
 
         CVPixelBufferRef imageBuffer =                                      // 4
             CMSampleBufferGetImageBuffer(sampleBuffer);
-
+        
         CIImage *sourceImage = [CIImage imageWithCVPixelBuffer:imageBuffer
                                                        options:nil];
-
+        //将CIImage对象设置为activeFilter的kCIInputImageKey值
         [self.activeFilter setValue:sourceImage forKey:kCIInputImageKey];
-
+        //通过筛选器得到输出图片，会返回一个封装了CIFilter操作的CIImage对象
         CIImage *filteredImage = self.activeFilter.outputImage;
 
         if (!filteredImage) {
             filteredImage = sourceImage;
         }
-
+        //将筛选好的CIImage的输出渲染到pixelBuffer中
         [self.ciContext render:filteredImage                                // 5
                toCVPixelBuffer:outputRenderBuffer
                         bounds:filteredImage.extent
                     colorSpace:self.colorSpace];
 
-
+        //将pixelBuffer连同当前样本的呈现时间都附加到AVAssetWriterInputPixelBufferAdaptor
         if (self.assetWriterVideoInput.readyForMoreMediaData) {             // 6
             if (![self.assetWriterInputPixelBufferAdaptor
                             appendPixelBuffer:outputRenderBuffer
@@ -217,7 +218,7 @@ static NSString *const THVideoFilename = @"movie.mov";
                 NSLog(@"Error appending pixel buffer.");
             }
         }
-        
+        //完成处理后释放
         CVPixelBufferRelease(outputRenderBuffer);
         
     }
@@ -236,7 +237,7 @@ static NSString *const THVideoFilename = @"movie.mov";
 	self.isWriting = NO;                                                    // 1
 
     dispatch_async(self.dispatchQueue, ^{
-
+        //finishWritingWithCompletionHandler终止写入会话并关闭磁盘上的文件
         [self.assetWriter finishWritingWithCompletionHandler:^{             // 2
 
             if (self.assetWriter.status == AVAssetWriterStatusCompleted) {

@@ -37,6 +37,7 @@
 - (id)initWithTimeline:(THTimeline *)timeline {
     self = [super init];
     if (self) {
+        //timeline对象保存了所有关于THTimelineItem实例和其基础AVAsset实例的引用
         _timeline = timeline;
     }
     return self;
@@ -65,7 +66,7 @@
     if (!THIsEmpty(mediaItems)) {                                           // 1
 
         CMPersistentTrackID trackID = kCMPersistentTrackID_Invalid;
-
+        //使用kCMPersistentTrackID_Invalid常量 AV Foundation 会自动从1到n生成一个正确的轨道ID
         AVMutableCompositionTrack *compositionTrack =                       // 2
             [self.composition addMutableTrackWithMediaType:mediaType
                                           preferredTrackID:trackID];
@@ -73,7 +74,7 @@
         CMTime cursorTime = kCMTimeZero;                                    // 3
 
         for (THMediaItem *item in mediaItems) {
-
+            //检查startTimeInTimeline是否为一个有效的CMTime值，此处视频和音乐轨道会返回kCMTimeInvalid，不过配音轨道不会
             if (CMTIME_COMPARE_INLINE(item.startTimeInTimeline,             // 4
             !=,
             kCMTimeInvalid)) {

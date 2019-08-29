@@ -24,7 +24,7 @@
 //
 
 #import <CoreMedia/CoreMedia.h>
-
+//用于表示在timeline区域用户界面上看到的彩色方块，该对象与AVFoundation没有依赖关系
 @interface THTimelineItem : NSObject
 
 @property (nonatomic) CMTimeRange timeRange;

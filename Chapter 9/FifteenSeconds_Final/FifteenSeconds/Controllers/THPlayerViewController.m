@@ -89,7 +89,10 @@ static const NSString *PlayerItemStatusContext;
 
     if (!self.player) {
         self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
-        self.playbackView.player = self.player;
+        dispatch_async(dispatch_get_main_queue(), ^{
+           self.playbackView.player = self.player;
+        });
+        
     } else {
         [self.player replaceCurrentItemWithPlayerItem:self.playerItem];
     }

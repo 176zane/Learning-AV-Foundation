@@ -115,7 +115,7 @@
 }
 
 - (AVVideoComposition *)buildVideoComposition {
-
+    //videoCompositionWithPropertiesOfAsset自动创建所需的组合对象和层指令，并设置renderSize，renderScale,frameDuration属性
     AVVideoComposition *videoComposition =                                  // 1
         [AVMutableVideoComposition
             videoCompositionWithPropertiesOfAsset:self.composition];
@@ -140,6 +140,9 @@
 
             [fromLayer setOpacityRampFromStartOpacity:1.0
                                          toEndOpacity:0.0
+                                            timeRange:timeRange];
+            [toLayer setOpacityRampFromStartOpacity:0.0
+                                         toEndOpacity:1.0
                                             timeRange:timeRange];
         }
 
@@ -195,16 +198,16 @@
     int layerInstructionIndex = 1;
 
     NSArray *compositionInstructions = vc.instructions;                     // 1
-
+    //注意自动生成的AVVideoComposition中的曾之灵保存于layerInstructions数组，第一个轨道的层指令作为数组的第一个元素，接下来是第二个轨道的层指令。
     for (AVMutableVideoCompositionInstruction *vci in compositionInstructions) {
-
+        //两个层指令的指令定义了组合中的过渡区域
         if (vci.layerInstructions.count == 2) {                             // 2
 
             THTransitionInstructions *instructions =
                 [[THTransitionInstructions alloc] init];
 
             instructions.compositionInstruction = vci;
-
+           
             instructions.fromLayerInstruction =                             // 3
                 (AVMutableVideoCompositionLayerInstruction *)vci.layerInstructions[1 - layerInstructionIndex];
 

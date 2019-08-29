@@ -27,7 +27,7 @@
 }
 
 - (void)beginExport {
-
+  
     self.exportSession = [self.composition makeExportable];                 // 1
     self.exportSession.outputURL = [self exportURL];
     self.exportSession.outputFileType = AVFileTypeMPEG4;
@@ -53,7 +53,7 @@
     double delayInSeconds = 0.1;
     int64_t delta = (int64_t)delayInSeconds * NSEC_PER_SEC;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delta);
-
+    //在短暂延迟后再来检查导出过程的状态
     dispatch_after(popTime, dispatch_get_main_queue(), ^{                   // 1
 
         AVAssetExportSessionStatus status = self.exportSession.status;
@@ -72,7 +72,7 @@
 - (void)writeExportedVideoToAssetsLibrary {
     NSURL *exportURL = self.exportSession.outputURL;
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-
+    //验证即将写入的内容是否可以被写入
     if ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:exportURL]) {  // 3
 
         [library writeVideoAtPathToSavedPhotosAlbum:exportURL               // 4
@@ -84,7 +84,7 @@
                 [UIAlertView showAlertWithTitle:@"Write Failed"
                                         message:message];
             }
-
+            //不管写入操作结果如何都需要将临时目录中的导出文件删除
             [[NSFileManager defaultManager] removeItemAtURL:exportURL       // 6
                                                       error:nil];
         }];

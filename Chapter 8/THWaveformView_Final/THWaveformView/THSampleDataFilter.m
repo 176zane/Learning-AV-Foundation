@@ -42,8 +42,8 @@
 - (NSArray *)filteredSamplesForSize:(CGSize)size {
 
     NSMutableArray *filteredSamples = [[NSMutableArray alloc] init];        // 1
-    NSUInteger sampleCount = self.sampleData.length / sizeof(SInt16);
-    NSUInteger binSize = sampleCount / size.width;
+    NSUInteger sampleCount = self.sampleData.length / sizeof(SInt16);//样本总数
+    NSUInteger binSize = sampleCount / size.width;//箱尺寸
 
     SInt16 *bytes = (SInt16 *) self.sampleData.bytes;
     
@@ -54,7 +54,8 @@
         SInt16 sampleBin[binSize];
 
         for (NSUInteger j = 0; j < binSize; j++) {                          // 2
-			sampleBin[j] = CFSwapInt16LittleToHost(bytes[i + j]);
+			//确保样本是按照主机内置的字节顺序处理
+            sampleBin[j] = CFSwapInt16LittleToHost(bytes[i + j]);
         }
         
         SInt16 value = [self maxValueInArray:sampleBin ofSize:binSize];     // 3

@@ -36,6 +36,7 @@ int main(int argc, const char * argv[]) {
      * more details on the available functions, macros, and constants. As with most of Apple's
      * lower-level C libraries, the best comments are usually found in the headers.
      */
+    
     printf("----- Using CMTime -----\n\n");
     // Making Time
     CMTime t1 = CMTimeMake(300, 100); // 3 seconds
@@ -52,8 +53,11 @@ int main(int argc, const char * argv[]) {
 
     // Adding and Subtracting times
     // 1) Create a new time equal to 8 seconds using the time values above and the CMTimeAdd function.
+    CMTime t4 = CMTimeAdd(t1, t2);
+    CMTimeShow(t4);
     // 2) Create a new time equal to 1 second using the time values above and the CMTimeSubtract function.
-
+    CMTime t5 = CMTimeSubtract(t1,t3);
+    CMTimeShow(t5);
     // Using Macros
     // Experiment using the various macros defined in CMTime.h.
     // Here's an example to get you started.
@@ -62,6 +66,8 @@ int main(int argc, const char * argv[]) {
     // Using Contants
     // CMTime.h defines a number of useful constants such as kCMTimeZero and kCMTimeInvalid
     // 1) Print these constants to the console using the CMTimeShow function
+    CMTimeShow(kCMTimeZero);
+    CMTimeShow(kCMTimeInvalid);
     // 2) Use the macros CMTIME_IS_VALID and CMTIME_IS_INVALID to test their values.
     printf("Is kCMTimeZero a valid time? %s\n", CMTIME_IS_VALID(kCMTimeZero) ? "YES" : "NO");
 
@@ -96,9 +102,11 @@ int main(int argc, const char * argv[]) {
     // Finding Unions and Intersections
     // Use the CMTimeRangeGetUnion and CMTimeRangeGetIntersection
     // 1) Get a union of range1 and range3
+    CMTimeRange range4 = CMTimeRangeGetUnion(range1, range3);
+    CMTimeRangeShow(range4);
     // 2) Use the CMTimeRangeContainsTimeRange on the union from step 1 to determine if it contains range2
-
-
+    
+    printf("Is range4 contains range2? %s\n", CMTimeRangeContainsTimeRange(range4, range2) ? "YES" : "NO");
 
 
     /*

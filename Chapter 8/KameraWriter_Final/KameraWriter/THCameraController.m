@@ -27,7 +27,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "THMovieWriter.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-
+//AVCaptureMovieFileOutput对应的是AVCaptureFileOutputRecordingDelegate协议
 @interface THCameraController () <AVCaptureVideoDataOutputSampleBufferDelegate,
                                   AVCaptureAudioDataOutputSampleBufferDelegate,
                                   THMovieWriterDelegate>
@@ -44,11 +44,12 @@
 - (BOOL)setupSessionOutputs:(NSError **)error {
     
     self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];         // 1
-    
+    //结合OpenGL ES和 CoreImage是设置kCVPixelFormatType_32BGRA该格式很适合
     NSDictionary *outputSettings =
         @{(id)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA)};
     
     self.videoDataOutput.videoSettings = outputSettings;
+    //会捕捉全部的可用帧，设置为NO会给委托方法一些额外的时间来处理样本
     self.videoDataOutput.alwaysDiscardsLateVideoFrames = NO;                // 2
     
     [self.videoDataOutput setSampleBufferDelegate:self

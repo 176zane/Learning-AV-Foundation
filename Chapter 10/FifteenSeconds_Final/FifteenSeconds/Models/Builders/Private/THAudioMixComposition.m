@@ -50,6 +50,7 @@
 - (AVPlayerItem *)makePlayable {                                            // 1
 	AVPlayerItem *playerItem =
         [AVPlayerItem playerItemWithAsset:[self.composition copy]];
+    //设置audioMix属性可以在播放音频是应用音频处理
 	playerItem.audioMix = self.audioMix;
 	return playerItem;
 }

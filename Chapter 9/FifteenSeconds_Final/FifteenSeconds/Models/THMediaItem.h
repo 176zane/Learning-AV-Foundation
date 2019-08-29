@@ -28,7 +28,7 @@
 #import "THTimelineItem.h"
 
 typedef void(^THPreparationCompletionBlock)(BOOL complete);
-
+//该类是AVAsset类实例的封装并负责为组合内容合理的载入和准备资源
 @interface THMediaItem : THTimelineItem
 
 @property (strong, nonatomic) AVAsset *asset;

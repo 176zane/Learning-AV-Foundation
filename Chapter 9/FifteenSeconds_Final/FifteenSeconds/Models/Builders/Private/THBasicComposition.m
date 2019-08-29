@@ -44,6 +44,7 @@
 }
 
 - (AVPlayerItem *)makePlayable {                                            // 1
+    //copy一个该对象的不可变副本 创建AVPlayerItem
     return [AVPlayerItem playerItemWithAsset:[self.composition copy]];
 }
 

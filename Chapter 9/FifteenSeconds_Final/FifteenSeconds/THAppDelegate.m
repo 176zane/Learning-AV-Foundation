@@ -50,7 +50,7 @@
 	UIEdgeInsets insets;
 	insets = UIEdgeInsetsZero;
 	UIImage *navbarImage = [[UIImage imageNamed:@"app_navbar_background"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 3, 0, 3)];
-	[[UINavigationBar appearance] setBackgroundImage:navbarImage forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage:navbarImage forBarMetrics:UIBarMetricsDefault];
 
     return YES;
 }
