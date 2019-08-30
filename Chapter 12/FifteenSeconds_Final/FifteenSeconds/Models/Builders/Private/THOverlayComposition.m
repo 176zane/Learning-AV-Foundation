@@ -56,7 +56,7 @@
 
         [syncLayer addSublayer:self.titleLayer];
 
-        // WARNING: This the 'titleLayer' property is NOT part of AV Foundation
+        // WARNING: This the 'syncLayer' property is NOT part of AV Foundation
         // Provided by AVPlayerItem+THAdditions category.
         playerItem.syncLayer = syncLayer;                                   // 2
     }
@@ -76,7 +76,7 @@
         
         [animationLayer addSublayer:videoLayer];                            // 2
 		[animationLayer addSublayer:self.titleLayer];
-        
+        //如果没有设置该值会导致图片与文本的位置发生颠倒
 		animationLayer.geometryFlipped = YES;                              // 3
         
 		AVVideoCompositionCoreAnimationTool *animationTool =                // 4
